@@ -8,7 +8,6 @@
   const toast = document.querySelector("#toast");
   const toastMessage = document.querySelector("#toastMessage");
   const themeColor = document.querySelector('meta[name="theme-color"]');
-  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
   let toastTimer;
 
   const getSavedTheme = () => {
@@ -32,7 +31,7 @@
     root.dataset.theme = theme;
     themeToggle.setAttribute("aria-pressed", String(isDark));
     themeToggle.setAttribute("aria-label", isDark ? "Ativar tema claro" : "Ativar tema escuro");
-    themeColor.setAttribute("content", isDark ? "#0d090a" : "#f2ece7");
+    themeColor.setAttribute("content", isDark ? "#000000" : "#ffffff");
   };
 
   const initialTheme = getSavedTheme() || "dark";
@@ -98,34 +97,6 @@
 
     await copyCurrentUrl();
   });
-
-  const revealElements = document.querySelectorAll(".reveal");
-
-  if ("IntersectionObserver" in window && !reduceMotion.matches) {
-    const observer = new IntersectionObserver(
-      (entries, revealObserver) => {
-        entries.forEach((entry) => {
-          if (!entry.isIntersecting) return;
-          entry.target.classList.add("is-visible");
-          revealObserver.unobserve(entry.target);
-        });
-      },
-      { threshold: 0.12, rootMargin: "0px 0px -24px" },
-    );
-
-    revealElements.forEach((element) => observer.observe(element));
-  } else {
-    revealElements.forEach((element) => element.classList.add("is-visible"));
-  }
-
-  if (window.matchMedia("(pointer: fine)").matches && !reduceMotion.matches) {
-    window.addEventListener("pointermove", (event) => {
-      const x = `${Math.round((event.clientX / window.innerWidth) * 100)}%`;
-      const y = `${Math.round((event.clientY / window.innerHeight) * 100)}%`;
-      document.body.style.setProperty("--pointer-x", x);
-      document.body.style.setProperty("--pointer-y", y);
-    }, { passive: true });
-  }
 
   currentYear.textContent = new Date().getFullYear();
 })();
